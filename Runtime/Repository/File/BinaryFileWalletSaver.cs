@@ -9,7 +9,7 @@ namespace WalletLib.Repository.File
     /// Wallet file saver, that use<see cref="BinaryFormatter"/> 
     /// for serializing and deserializing wallet data
     /// </summary>
-    class BinaryFileWalletSaver : IFileWalletSaver
+    public class BinaryFileWalletSaver : IFileWalletSaver
     {
         public Dictionary<string, int> LoadFromFile(string filePath)
         {

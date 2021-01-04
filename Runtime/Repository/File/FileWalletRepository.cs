@@ -19,7 +19,7 @@ namespace WalletLib.Repository.File
     /// Use<see cref="JsonFileWalletSaver"/> or<see cref="BinaryFileWalletSaver"/> for work with file data
     /// </para>
     /// </remarks>
-    class FileWalletRepository : IWalletRepository
+    public class FileWalletRepository : IWalletRepository
     {
         /// <summary>
         /// Create<see cref="FileWalletRepository"/> instance and

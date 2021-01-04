@@ -10,7 +10,7 @@ namespace WalletLib.Startup
     /// <para><see cref="PlayerPrefsWalletRepository"/></para>
     /// </summary>
     [CreateAssetMenu(fileName = "PlayerPrefsWallet", menuName = "Wallet/PlayerPrefsRepo", order = 1)]
-    class PlayerPrefsWalletRepositoryConfig : AbstractWalletRepositoryConfig
+    public class PlayerPrefsWalletRepositoryConfig : AbstractWalletRepositoryConfig
     {
         /// <summary>
         /// Wallet key for Unity PlayerPrefs

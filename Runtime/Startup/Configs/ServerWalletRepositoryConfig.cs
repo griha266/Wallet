@@ -9,7 +9,7 @@ namespace WalletLib.Startup
     /// <para><see cref="ServerWalletRepository"/></para>
     /// </summary>
     [CreateAssetMenu(fileName = "ServerWallet", menuName = "Wallet/ServerRepo", order = 1)]
-    class ServerWalletRepositoryConfig : AbstractWalletRepositoryConfig
+    public class ServerWalletRepositoryConfig : AbstractWalletRepositoryConfig
     {
         /// <summary>
         /// Server host for request

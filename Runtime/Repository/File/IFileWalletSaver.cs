@@ -5,7 +5,7 @@ namespace WalletLib.Repository.File
     /// <summary>
     /// Base interface for saving and loading from file wallet data
     /// </summary>
-    interface IFileWalletSaver
+    public interface IFileWalletSaver
     {
         /// <summary>
         /// Load file from selected path and deserialized it to wallet data

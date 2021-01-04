@@ -7,7 +7,7 @@ namespace WalletLib.Repository.File
     /// Wallet file saver, that use<see cref="Newtonsoft.Json.JsonConvert"/> 
     /// for serializing and deserializing wallet data
     /// </summary>
-    class JsonFileWalletSaver : IFileWalletSaver
+    public class JsonFileWalletSaver : IFileWalletSaver
     {
         public Dictionary<string, int> LoadFromFile(string filePath) =>
             JsonConvert.DeserializeObject<Dictionary<string, int>>(System.IO.File.ReadAllText(filePath));

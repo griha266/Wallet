@@ -10,7 +10,7 @@ namespace WalletLib.Startup
     /// <para><see cref="FileWalletRepository"/></para>
     /// </summary>
     [CreateAssetMenu(fileName = "FileWallet", menuName = "Wallet/FileRepo", order = 1)]
-    class FileWalletRepositoryConfig : AbstractWalletRepositoryConfig
+    public class FileWalletRepositoryConfig : AbstractWalletRepositoryConfig
     {
         /// <summary>
         /// List of available currencies

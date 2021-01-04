@@ -19,7 +19,7 @@ namespace WalletLib.Repository
     /// Can be created only from<see cref="PlayerPrefsWalletRepository.Create(string[], string, bool)"/>>
     /// </para>
     /// </remarks>
-    class PlayerPrefsWalletRepository : IWalletRepository
+    public class PlayerPrefsWalletRepository : IWalletRepository
     {
         /// <summary>
         /// Create <see cref="PlayerPrefsWalletRepository"/> instance

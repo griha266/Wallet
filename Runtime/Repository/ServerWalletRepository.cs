@@ -76,7 +76,7 @@ namespace WalletLib.Repository
     /// Use <see cref="System.Net.Http.HttpClient"/> for http requests to api
     /// </para>
     /// </remarks>
-    class ServerWalletRepository : IWalletRepository
+    public class ServerWalletRepository : IWalletRepository
     {
         private readonly string _walletUri;
         private static readonly HttpClient client = new HttpClient();

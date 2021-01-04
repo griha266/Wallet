@@ -12,7 +12,7 @@ namespace WalletLib.Startup
     /// <summary>
     /// Base class for initialize Wallet in Unity scene
     /// </summary>
-    class WalletStartup : MonoBehaviour
+    public class WalletStartup : MonoBehaviour
     {
         /// <summary>
         /// Config for repository<see cref="AbstractWalletRepositoryConfig"/>

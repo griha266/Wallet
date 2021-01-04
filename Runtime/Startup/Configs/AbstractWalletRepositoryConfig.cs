@@ -7,7 +7,7 @@ namespace WalletLib.Startup
     /// Base abstract class for<see cref="IWalletRepository"/> config.
     /// Used for creating repositories
     /// </summary>
-    abstract class AbstractWalletRepositoryConfig : ScriptableObject
+    public abstract class AbstractWalletRepositoryConfig : ScriptableObject
     {
         /// <summary>
         /// Create repository with current config
