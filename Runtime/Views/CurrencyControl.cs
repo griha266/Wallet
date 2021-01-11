@@ -25,7 +25,7 @@ namespace WalletLib.View
 
         private void Awake()
         {
-            WalletStartup.RequestController(controller =>
+            WalletStartup.RequestWallet(wallet =>
             {
                 var addStream = AddButton
                     .OnClickAsObservable()
@@ -37,12 +37,12 @@ namespace WalletLib.View
 
                 Observable
                     .Merge(addStream, substractStream)
-                    .Subscribe((i) => controller.AddCash(CurrencyId, DifferencePerClick * i))
+                    .Subscribe((i) => wallet.AddCash(CurrencyId, DifferencePerClick * i))
                     .AddTo(this);
 
                 ClearButton
                     .OnClickAsObservable()
-                    .Subscribe((_) => controller.ClearCurrency(CurrencyId))
+                    .Subscribe((_) => wallet.ClearCurrency(CurrencyId))
                     .AddTo(this);
             });
         }

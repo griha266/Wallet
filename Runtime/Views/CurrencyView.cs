@@ -32,31 +32,31 @@ namespace WalletLib.View
             ErrorObj.SetActive(false);
             CurrencyObj.SetActive(false);
 
-            WalletStartup.RequestController(controller =>
+            WalletStartup.RequestWallet(wallet =>
             {
-                controller
-                    .OnWalletStateChange
+                wallet
+                    .OnStateChange
                     .Select(state => state.IsValid())
                     .DistinctUntilChanged()
                     .Subscribe(isValid => CurrencyObj.SetActive(isValid))
                     .AddTo(this);
 
-                controller
-                    .OnWalletStateChange
+                wallet
+                    .OnStateChange
                     .Select(state => state.IsLoading())
                     .DistinctUntilChanged()
                     .Subscribe(isLoading => LoadingObj.SetActive(isLoading))
                     .AddTo(this);
 
-                controller
-                    .OnWalletStateChange
+                wallet
+                    .OnStateChange
                     .Select(state => state.IsError())
                     .DistinctUntilChanged()
                     .Subscribe(isError => ErrorObj.SetActive(isError))
                     .AddTo(this);
 
-                controller
-                    .OnWalletStateChange
+                wallet
+                    .OnStateChange
                     .Where((state) => state.IsValid() && state.ContainsCurrency(CurrencyId))
                     .Select((state) => state.GetUserCash(CurrencyId))
                     .DistinctUntilChanged()

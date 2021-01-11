@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UniRx;
-using WalletLib.Controller;
 using WalletLib.Core;
 using WalletLib.Logger.Unity;
 
@@ -12,38 +11,34 @@ namespace WalletLib.Startup
     /// <summary>
     /// Base class for initialize Wallet in Unity scene
     /// </summary>
-    public class WalletStartup : MonoBehaviour
+    class WalletStartup : MonoBehaviour
     {
         /// <summary>
         /// Config for repository<see cref="AbstractWalletRepositoryConfig"/>
         /// </summary>
         public AbstractWalletRepositoryConfig Config;
-        private static WalletController _controllerInstance;
-        private static Queue<Action<WalletController>> _onControllerCreated = new Queue<Action<WalletController>>();
+        private static Wallet _walletInstance;
+        private static Queue<Action<Wallet>> _onWalletCreated = new Queue<Action<Wallet>>();
 
         private void Awake()
         {
             IWalletRepository repository = Config.Create();
 
             Wallet
-                .Create(repository)
+                .Create(repository, new UnityLogger())
                 .ContinueWith((wallet) =>
                 {
-                    _controllerInstance = new WalletController(wallet, new UnityLogger());
-                    Debug.Log("Created controller");
-                    if (_onControllerCreated.Count > 0)
+                    if (_onWalletCreated.Count > 0)
                     {
-                        Debug.Log("Start callback queue");
-                        while (_onControllerCreated.Count != 0)
+                        while (_onWalletCreated.Count != 0)
                         {
-                            Debug.Log("Call callback");
-                            _onControllerCreated.Dequeue().Invoke(_controllerInstance);
+                            _onWalletCreated.Dequeue().Invoke(_walletInstance);
                         }
-                        _onControllerCreated = null;
+                        _onWalletCreated = null;
                     }
 
-                    _controllerInstance
-                        .OnWalletStateChange
+                    _walletInstance
+                        .OnStateChange
                         .Where(state => state.IsError())
                         .Subscribe(state => Debug.LogError(state.exceptionMessage))
                         .AddTo(this);
@@ -53,22 +48,19 @@ namespace WalletLib.Startup
         }
 
         /// <summary>
-        /// Subscribe to<see cref="WalletController"/> initialization.
+        /// Subscribe to<see cref="Wallet"/> initialization.
         /// If controller already created, invoke callback immediately.
         /// </summary>
-        /// <param name="onControllerCreated">Callback</param>
-        public static void RequestController(Action<WalletController> onControllerCreated)
+        /// <param name="onWalletCreated">Callback</param>
+        public static void RequestWallet(Action<Wallet> onWalletCreated)
         {
-            Debug.Log("Controller requested");
-            if (_controllerInstance == null)
+            if (_walletInstance == null)
             {
-                Debug.Log("Controller is not created, add callback to queue");
-                _onControllerCreated.Enqueue(onControllerCreated);
+                _onWalletCreated.Enqueue(onWalletCreated);
             }
             else
             {
-                Debug.Log("Controller created, invoke callback");
-                onControllerCreated.Invoke(_controllerInstance);
+                onWalletCreated.Invoke(_walletInstance);
             }
         }
 
