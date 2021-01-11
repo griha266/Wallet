@@ -49,7 +49,7 @@ namespace WalletLib.Startup
 
         /// <summary>
         /// Subscribe to<see cref="Wallet"/> initialization.
-        /// If controller already created, invoke callback immediately.
+        /// If wallet already created, invoke callback immediately.
         /// </summary>
         /// <param name="onWalletCreated">Callback</param>
         public static void RequestWallet(Action<Wallet> onWalletCreated)
