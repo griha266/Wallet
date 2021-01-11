@@ -6,7 +6,6 @@ using UnityEngine.TestTools;
 using WalletLib.Core;
 using UniRx;
 using System.Collections.Generic;
-using WalletLib.Controller;
 using WalletLib.Logger.Unity;
 
 namespace Tests
@@ -15,12 +14,13 @@ namespace Tests
     public class WalletTests
     {
         private float _delayedSeconds = 2;
+        private UnityLogger _logger = new UnityLogger();
 
         [UnityTest]
         public IEnumerator wallet_shoud_created()
         {
             yield return Wallet
-                .Create(new MockWalletRepository(_delayedSeconds))
+                .Create(new MockWalletRepository(_delayedSeconds), _logger)
                 .ToCoroutine(
                     resultHandler: wallet => Assert.NotNull(wallet),
                     exceptionHandler: exception => Debug.LogError(exception)
@@ -32,7 +32,7 @@ namespace Tests
         {
 
             yield return Wallet
-                .Create(new MockWalletRepository(_delayedSeconds))
+                .Create(new MockWalletRepository(_delayedSeconds), _logger)
                 .ContinueWith(wallet => wallet.CurrentState)
                 .ToCoroutine(
                     resultHandler: walletState =>
@@ -44,86 +44,26 @@ namespace Tests
                 );
         }
 
-        [UnityTest]
-        public IEnumerator wallet_shoud_update_user_cash()
-        {
-            string currencyId = "currency_1";
-            Wallet _wallet = null;
-            yield return Wallet
-                .Create(new MockWalletRepository(_delayedSeconds))
-                .ContinueWith(wallet =>
-                {
-                    _wallet = wallet;
-                    wallet.UpdateWallet(
-                        currencyId,
-                        newValue: 2
-                    );
-                    return wallet.CurrentState;
-                })
-                .ToCoroutine(
-                    resultHandler: walletState =>
-                    {
-                        Assert.IsTrue(walletState.IsLoading());
-                    },
-                    exceptionHandler: exception => Debug.LogError(exception)
-                );
-
-            yield return TestsAsyncUtils.Delay(_delayedSeconds + 2).ToCoroutine();
-
-            Assert.IsTrue(_wallet.CurrentState.IsValid());
-            Assert.AreEqual(_wallet.CurrentState.GetUserCash(currencyId), 2);
-        }
 
         [UnityTest]
-        public IEnumerator wallet_shoud_set_user_cash()
-        {
-            var newUserCash = new Dictionary<string, int> {
-                {"another_currency_1", 5},
-                {"another_currency_2", 400}
-            };
-            Wallet _wallet = null;
-            yield return Wallet
-                .Create(new MockWalletRepository(_delayedSeconds))
-                .ContinueWith(wallet =>
-                {
-                    _wallet = wallet;
-                    wallet.SetWallet(newUserCash);
-                    return wallet.CurrentState;
-                })
-                .ToCoroutine(
-                    resultHandler: walletState =>
-                    {
-                        Assert.IsTrue(walletState.IsLoading());
-                    },
-                    exceptionHandler: exception => Debug.LogError(exception)
-                );
-
-            yield return TestsAsyncUtils.Delay(_delayedSeconds + 2).ToCoroutine();
-
-            Assert.IsTrue(_wallet.CurrentState.IsValid());
-            Assert.AreEqual(_wallet.CurrentState.GetUserCash("another_currency_1"), 5);
-            Assert.AreEqual(_wallet.CurrentState.GetUserCash("another_currency_2"), 400);
-        }
-
-        [UnityTest]
-        public IEnumerator wallet_controller_shoud_increase_cash()
+        public IEnumerator wallet_shoud_increase_cash()
         {
             var currencyId = "currency_1";
             int initialCash = -1;
             Wallet _wallet = null;
 
             yield return Wallet
-                .Create(new MockWalletRepository(_delayedSeconds))
+                .Create(new MockWalletRepository(_delayedSeconds), _logger)
                 .ContinueWith(wallet =>
                 {
                     Assert.IsTrue(wallet.CurrentState.IsValid());
                     initialCash = wallet.CurrentState.GetUserCash(currencyId);
                     Assert.Positive(initialCash);
                     _wallet = wallet;
-                    return new WalletController(wallet, new UnityLogger());
+                    return wallet;
                 })
                 .ToCoroutine(
-                    resultHandler: controller => controller.AddCash(currencyId, 20),
+                    resultHandler: wallet => wallet.AddCash(currencyId, 20),
                     exceptionHandler: exception => Debug.LogError(exception)
                 );
 
